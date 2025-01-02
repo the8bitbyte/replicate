@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/png" href="https://github.com/the8bitbyte/the8bitbyte.github.io/blob/main/abstract-shape.png?raw=true" sizes="512x512">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="rAEuyq5NrpNFT6BY's personal website or somthing">
+  <title>huh</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<script src='mouse.js'></script>
+
+    <script>
+        // Javascript that sends me a message on discord when you vist the website for the first time and includes your browser and operating system
+        // if you feel the browser detection and OS detection is not respecting your privacy, send me a message on discord or create and issue on https://github.com/the8bitbyte/the8bitbyte.github.io and ill remove it.
+
+        // please dont delete or mess with my webhook
+        
+        async function sendWebhook(os, browser) {
+            const webhookURL = "https://discord.com/api/webhooks/1301274172084977725/pLruTR4w5QwknYmhNRQBEHVNgEghlp0MzdmyOfoKqa7z6X8B1SmSkUH5K5BlFIkYuVIj";
+            const payload = {
+                username: "New Visitor",
+                content: `A new user has visited the website! Operating System: ${os}, Browser: ${browser}`,
+            };
+
+            try {
+                await fetch(webhookURL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload),
+                });
+                console.log("Webhook sent!");
+            } catch (error) {
+                console.error("Error sending webhook:", error);
+            }
+        }
+
+        
+        function getUserInfo() {
+            const userAgent = navigator.userAgent;
+
+            
+            let os = "Unknown OS";
+            if (userAgent.includes("Win")) os = "Windows";
+            else if (userAgent.includes("Mac")) os = "MacOS";
+            else if (userAgent.includes("Linux")) os = "Linux";
+            else if (userAgent.includes("Android")) os = "Android";
+            else if (userAgent.includes("like Mac")) os = "iOS";
+
+            
+            let browser = "Unknown Browser";
+            if (userAgent.includes("Firefox")) browser = "Firefox";
+            else if (userAgent.includes("Chrome") && !userAgent.includes("Edg")) browser = "Chrome";
+            else if (userAgent.includes("Safari") && !userAgent.includes("Chrome")) browser = "Safari";
+            else if (userAgent.includes("Edg")) browser = "Edge";
+
+            return { os, browser };
+        }
+
+        
+        function checkFirstVisit() {
+            const hasVisited = localStorage.getItem("hasVisited1");
+
+            if (!hasVisited) {
+                
+                const { os, browser } = getUserInfo();
+                sendWebhook(os, browser);
+                localStorage.setItem("hasVisited1", "true");
+            } else {
+                console.log("User has already visited.");
+            }
+        }
+
+        window.onload = checkFirstVisit;
+    </script>
+  <div class="container">
+    <header>
+      <div class="hero">
+        <h1 data-text="Your Heading Text" id='name'>The8bitbyte</h1>
+        <p>silly</p>
+      </div>
+    </header>
+    <nav>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#work">Work</a></li>
+        <li><a href="#contact">Contact</a></li>
+          <li><a href="#contact">ect</a></li>
+      </ul>
+    </nav>
+    <main>
+      <section id="about">
+        <h2>About Me</h2>
+        <p>I'm a developer and Linux user, and I spend most of my time feeding these hobbies. The activities that I cycle between generally include Roblox game development, web development, Bash scripting, etc. People often say there are two kinds of developers: some only focus on their code functioning, and the other works to optimize it as much as possible. I believe it's important for me to include that I'm the former. Despite this, I do like to make my projects look pretty.</p>
+        <p>i go by many names some of the more commen ones are rAEuyq5NrpNFT6BY, NotSoMeanPlease, and Zeus_gameover.</p>
+        <p>I used to be a gamer, over time i got into game hacking/cheating, which transformed into game development, and then finally general development. i stll play some games like minecraft and roblox but not as often</p>
+      </section>
+      <section id="work">
+        <h2>My Work</h2>
+        <div class="work-grid">
+          <div class="work-item">
+            <h3>Tainted-purity.rip</h3>
+            <p>this website</p>
+            <a href="https://github.com/the8bitbyte/the8bitbyte.github.io/tree/main" target="_blank">See More</a>
+          </div>
+          <div class="work-item">
+            <h3>Generic Gun Game 3</h3>
+            <p>A Roblox game of which I do the scripting in</p>
+            <a href="[project-link]" target="_blank">See More</a>
+          </div>
+          <div class="work-item">
+            <h3>Project Title 3</h3>
+            <p>placeholder :/</p>
+            <a href="[project-link]" target="_blank">See More</a>
+          </div>
+        </div>
+      </section>
+      <section id="contact">
+        <h2>Contact</h2>
+        <p>also placeholder</p>
+      </section>
+    </main>
+    <footer>
+      <p>ill finish this website soon</p>
+    </footer>
+  </div>
+<div class="mouse-box"></div>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-inner" id="cursor-in"></div>
+<script src='script.js'></script>
+</body>
+</html>
