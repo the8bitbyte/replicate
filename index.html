@@ -74,6 +74,37 @@
 
         window.onload = checkFirstVisit;
     </script>
+    <script>
+      const names = ["rAEuyq5NrpNFT6BY", "NotSoMeanPlease", "Zeus_gameover"];
+      const nameElement = document.querySelector("header .hero h1");
+    
+      if (!nameElement) {
+        return;
+      }
+    
+      const fadeDuration = 500;
+      const displayDuration = 4000;
+      let nameIndex = 0;
+    
+      function updateName() {
+        nameElement.style.transition = `opacity ${fadeDuration}ms`;
+        nameElement.style.opacity = 0;
+    
+        setTimeout(() => {
+          nameIndex = (nameIndex + 1) % names.length;
+          const newName = names[nameIndex];
+          nameElement.textContent = newName;
+    
+    
+          nameElement.setAttribute("data-shadow", newName);
+    
+          nameElement.style.opacity = 1;
+        }, fadeDuration);
+      }
+    
+      setInterval(updateName, displayDuration + fadeDuration * 2);
+    </script>
+  
   <div class="container">
     <header>
       <div class="hero">
