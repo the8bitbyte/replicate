@@ -1,0 +1,1 @@
+if you belive the obfuscated file and this file arent the same, you can obfuscate this using https://obfuscator.io/#code and set "String Array Wrappers Type" to function, and then compare the hashes of the 2 files
