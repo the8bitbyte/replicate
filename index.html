@@ -1,164 +1,318 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <link rel="icon" type="image/png" href="https://github.com/the8bitbyte/the8bitbyte.github.io/blob/main/abstract-shape.png?raw=true" sizes="512x512">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="rAEuyq5NrpNFT6BY's personal website or somthing">
-  <title>huh</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-<script src='mouse.js'></script>
 
-    <script>
-        // Javascript that sends me a message on discord when you vist the website for the first time and includes your browser and operating system
-        // if you feel the browser detection and OS detection is not respecting your privacy, send me a message on discord or create and issue on https://github.com/the8bitbyte/the8bitbyte.github.io and ill remove it.
+const allowedDomains = [
+    "the8bitbyte.github.io",
+    "phcode.dev",
+    "tainted-purity.rip",
+    "phcode.live"
+];
 
-        // please dont delete or mess with my webhook
-        
-        async function sendWebhook(os, browser) {
-            const webhookURL = "https://discord.com/api/webhooks/1301274172084977725/pLruTR4w5QwknYmhNRQBEHVNgEghlp0MzdmyOfoKqa7z6X8B1SmSkUH5K5BlFIkYuVIj";
-            const payload = {
-                username: "New Visitor",
-                content: `A new user has visited the website! Operating System: ${os}, Browser: ${browser}`,
-            };
+function getDomainFromUrl(url) {
+    try {
+        const hostname = new URL(url).hostname;
+        return hostname;
+    } catch (error) {
+        console.error("Invalid URL:", url);
+        return null;
+    }
+}
 
-            try {
-                await fetch(webhookURL, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(payload),
-                });
-                console.log("Webhook sent!");
-            } catch (error) {
-                console.error("Error sending webhook:", error);
+function checkDomainMatch() {
+    const currentUrl = window.location.href;
+    const currentDomain = getDomainFromUrl(currentUrl);
+
+    if (!currentDomain) {
+        console.error("Could not determine the domain of the current URL.");
+        return false;
+    }
+
+    const isAllowed = allowedDomains.some(domain => currentDomain.includes(domain));
+
+    if (isAllowed) {
+        console.log("This domain is allowed:", currentDomain);
+    } else {
+        console.log("This domain is not allowed:", currentDomain);
+    }
+
+    return isAllowed;
+}
+
+
+const cssString = `
+
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #000;
+  color: #fff;
+  line-height: 1.6;
+  cursor: none;
+}
+
+a {
+    cursor: none;
+}
+
+.mouse-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: solid #c0c0c0; 
+    z-index: -2;
+}
+
+.cursor-inner.scroll {
+    width: 10px;
+    height: 10px;
+}
+.cursor.clicked {
+    width: 20px;
+    height: 20px;
+}
+.hide-cursor {
+    cursor: none; /* hide cursor, again */
+}
+
+.trail { /* trail elements that i stole :100: */
+    position: absolute;
+    background-color: #ffde22;
+
+    height: 5px; width: 5px;
+    border-radius: 28px;
+    z-index: 1000;
+    pointer-events: none;
+  }
+.cursor-inner.hover {
+    width: 18.75px;
+    height: 18.75px;
+    border-radius: 5px;
+}
+.cursor.scroll {
+    height: 40px;
+    width: 20px;
+    border-radius: 10px;
+}
+.cursor {
+    box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.8);
+    width: 30px;
+    height: 30px;
+    background-color: rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(3px);
+    position: fixed;
+    transform: translate(-50%, -50%);
+    z-index: 100000;
+}
+.cursor-inner {
+    width: 15px;
+    height: 15px;
+    background-color: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    position: fixed;
+    transform: translate(-50%, -50%);
+    z-index: 100000;
+}
+.cursor.hover {
+    border-radius: 8px;
+}
+.cursor, .cursor-inner {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease, border-radius 0.2s ease;
+    z-index: 10000;
+}
+
+
+.trail {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+
+
+
+
+
+a {
+  color: #9b59b6;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+
+header {
+  position: relative;
+  padding: 40px 20px;
+  text-align: center;
+  overflow: hidden;
+}
+header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExeHZnNTg4Y2c5anA0bDJ6OXduZzhramtpcDgxNnlibWtzcHZ2eDJlYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/eJoZAwRN9OI5QjthIE/giphy.webp');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: blur(5px);
+  z-index: -1;
+}
+
+header .hero h1 {
+  opacity: 1;
+  transition: opacity 500ms ease-in-out;
+  margin: 0;
+  font-size: 2.5rem;
+  color: #bc00ff;
+  text-shadow: 0 0 5px #000000, 0 0 10px #000000, 0 0 20px #000000, 0 0 30px rgba(143, 37, 187, 0);
+}
+
+header .hero p {
+  font-size: 1.2rem;
+  margin: 10px 0 20px;
+}
+
+.cta-button {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 1rem;
+  background: #9b59b6;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.cta-button:hover {
+  background: #8e44ad;
+}
+
+
+nav {
+  background: #111111;
+  padding: 10px 20px;
+}
+
+nav ul {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav li {
+  font-size: 1rem;
+}
+
+
+main {
+  flex: 1;
+  padding: 20px;
+}
+
+section {
+  margin-bottom: 40px;
+}
+
+h2 {
+  font-size: 2rem;
+  color: #9b59b6;
+  position: relative;
+  padding-bottom: 5px;
+  margin-bottom: 20px;
+}
+
+h2::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px; /* Height of the border */
+  background: linear-gradient(to right, #7F00FF, #E100FF);
+  z-index: 1;
+}
+
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.work-item {
+  background: #0e0e0e;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.work-item h3 {
+  margin-top: 0;
+  color: #9b59b6;
+}
+
+
+footer {
+  background: #111;
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+`;
+
+function applyCSS() {
+    
+  const allowed = checkDomainMatch();
+    
+  if (allowed === true) {
+      const styleElement = document.createElement('style');
+      styleElement.textContent = cssString;
+
+      // Append the <style> element to the <head> of the document
+      document.head.appendChild(styleElement);
+  }
+  else {
+      fetch('skid.html')
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
             }
-        }
+            return response.text();
+          })
+          .then(data => {
+            document.open();
+            document.write(data);
+            document.close();
+          })
+          .catch(error => {
+            console.error('Failed to load skid.html:', error);
+          });
+  }
+    
+}
 
-        
-        function getUserInfo() {
-            const userAgent = navigator.userAgent;
-
-            
-            let os = "Unknown OS";
-            if (userAgent.includes("Win")) os = "Windows";
-            else if (userAgent.includes("Mac")) os = "MacOS";
-            else if (userAgent.includes("Linux")) os = "Linux";
-            else if (userAgent.includes("Android")) os = "Android";
-            else if (userAgent.includes("like Mac")) os = "iOS";
-
-            
-            let browser = "Unknown Browser";
-            if (userAgent.includes("Firefox")) browser = "Firefox";
-            else if (userAgent.includes("Chrome") && !userAgent.includes("Edg")) browser = "Chrome";
-            else if (userAgent.includes("Safari") && !userAgent.includes("Chrome")) browser = "Safari";
-            else if (userAgent.includes("Edg")) browser = "Edge";
-
-            return { os, browser };
-        }
-
-        
-        function checkFirstVisit() {
-            const hasVisited = localStorage.getItem("hasVisited1");
-
-            if (!hasVisited) {
-                
-                const { os, browser } = getUserInfo();
-                sendWebhook(os, browser);
-                localStorage.setItem("hasVisited1", "true");
-            } else {
-                console.log("User has already visited.");
-            }
-        }
-
-        window.onload = checkFirstVisit;
-    </script>
-    <script>
-      const names = ["rAEuyq5NrpNFT6BY", "NotSoMeanPlease", "Zeus_gameover"];
-      const nameElement = document.querySelector("header .hero h1");
-    
-      if (!nameElement) {
-        return;
-      }
-    
-      const fadeDuration = 500;
-      const displayDuration = 4000;
-      let nameIndex = 0;
-    
-      function updateName() {
-        nameElement.style.transition = `opacity ${fadeDuration}ms`;
-        nameElement.style.opacity = 0;
-    
-        setTimeout(() => {
-          nameIndex = (nameIndex + 1) % names.length;
-          const newName = names[nameIndex];
-          nameElement.textContent = newName;
-    
-    
-          nameElement.setAttribute("data-shadow", newName);
-    
-          nameElement.style.opacity = 1;
-        }, fadeDuration);
-      }
-    
-      setInterval(updateName, displayDuration + fadeDuration * 2);
-    </script>
-  
-  <div class="container">
-    <header>
-      <div class="hero">
-        <h1 data-text="Your Heading Text" id='name'>The8bitbyte</h1>
-        <p>silly</p>
-      </div>
-    </header>
-    <nav>
-      <ul>
-        <li><a href="#about">About</a></li>
-        <li><a href="#work">Work</a></li>
-        <li><a href="#contact">Contact</a></li>
-          <li><a href="#contact">ect</a></li>
-      </ul>
-    </nav>
-    <main>
-      <section id="about">
-        <h2>About Me</h2>
-        <p>I'm a developer and Linux user, and I spend most of my time feeding these hobbies. The activities that I cycle between generally include Roblox game development, web development, Bash scripting, etc. People often say there are two kinds of developers: some only focus on their code functioning, and the other works to optimize it as much as possible. I believe it's important for me to include that I'm the former. Despite this, I do like to make my projects look pretty.</p>
-        <p>i go by many names some of the more commen ones are rAEuyq5NrpNFT6BY, NotSoMeanPlease, and Zeus_gameover.</p>
-        <p>I used to be a gamer, over time i got into game hacking/cheating, which transformed into game development, and then finally general development. i stll play some games like minecraft and roblox but not as often</p>
-      </section>
-      <section id="work">
-        <h2>My Work</h2>
-        <div class="work-grid">
-          <div class="work-item">
-            <h3>Tainted-purity.rip</h3>
-            <p>this website</p>
-            <a href="https://github.com/the8bitbyte/the8bitbyte.github.io/tree/main" target="_blank">See More</a>
-          </div>
-          <div class="work-item">
-            <h3>Generic Gun Game 3</h3>
-            <p>A Roblox game of which I do the scripting in</p>
-            <a href="[project-link]" target="_blank">See More</a>
-          </div>
-          <div class="work-item">
-            <h3>Project Title 3</h3>
-            <p>placeholder :/</p>
-            <a href="[project-link]" target="_blank">See More</a>
-          </div>
-        </div>
-      </section>
-      <section id="contact">
-        <h2>Contact</h2>
-        <p>also placeholder</p>
-      </section>
-    </main>
-    <footer>
-      <p>ill finish this website soon</p>
-    </footer>
-  </div>
-<div class="mouse-box"></div>
-<div class="cursor" id="cursor"></div>
-<div class="cursor-inner" id="cursor-in"></div>
-<script src='script.js'></script>
-</body>
-</html>
+// Run the function when the window loads
+window.addEventListener('load', applyCSS);
