@@ -295,7 +295,7 @@ function applyCSS() {
       document.head.appendChild(styleElement);
   }
   else {
-      fetch('skid.html')
+      fetch('https://raw.githubusercontent.com/the8bitbyte/the8bitbyte.github.io/refs/heads/main/skid.html')
           .then(response => {
             if (!response.ok) {
               throw new Error(`HTTP error! Status: ${response.status}`);
