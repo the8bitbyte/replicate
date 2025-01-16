@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# Function to convert a hex color to RGB
+hex_to_rgb() {
+    local hex=$1
+    echo "$((16#${hex:1:2})) $((16#${hex:3:2})) $((16#${hex:5:2}))"
+}
+
+# Function to calculate intermediate color
+interpolate_color() {
+    local start=$1
+    local end=$2
+    local factor=$3
+
+    local r1 g1 b1 r2 g2 b2
+    read r1 g1 b1 <<<"$(hex_to_rgb $start)"
+    read r2 g2 b2 <<<"$(hex_to_rgb $end)"
+
+    printf "#%02X%02X%02X" \
+        $(bc <<<"($r1 + ($r2 - $r1) * $factor)/1") \
+        $(bc <<<"($g1 + ($g2 - $g1) * $factor)/1") \
+        $(bc <<<"($b1 + ($b2 - $b1) * $factor)/1")
+}
+
+# Check arguments
+if [[ $# -ne 3 ]]; then
+    echo "Usage: $0 <file.ascii> <start_color> <end_color>"
+    exit 1
+fi
+
+file=$1
+start_color=$2
+end_color=$3
+
+# Ensure the file exists
+if [[ ! -f "$file" ]]; then
+    echo "File not found: $file"
+    exit 1
+fi
+
+# Get the longest line length for gradient calculation
+max_length=$(awk '{ if (length > max) max = length } END { print max }' "$file")
+
+# Build and print the entire output in one go
+output=""
+while IFS= read -r line; do
+    for ((i=0; i<${#line}; i++)); do
+        char="${line:i:1}"
+        factor=$(bc <<<"scale=4; $i / $max_length")
+        color=$(interpolate_color "$start_color" "$end_color" "$factor")
+        output+="\e[38;2;$(hex_to_rgb "$color")m$char"
+    done
+    output+="\e[0m\n"
+done < "$file"
+
+# Print the entire output
+echo -e "$output"
