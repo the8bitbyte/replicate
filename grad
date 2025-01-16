@@ -16,23 +16,24 @@ interpolate_color() {
     read r1 g1 b1 <<<"$(hex_to_rgb $start)"
     read r2 g2 b2 <<<"$(hex_to_rgb $end)"
 
-    printf "%d %d %d" \
+    printf "%d;%d;%d" \
         $(awk "BEGIN {printf \"%d\", $r1 + ($r2 - $r1) * $factor}") \
         $(awk "BEGIN {printf \"%d\", $g1 + ($g2 - $g1) * $factor}") \
         $(awk "BEGIN {printf \"%d\", $b1 + ($b2 - $b1) * $factor}")
 }
 
 # Check arguments
-if [[ $# -ne 3 ]]; then
-    echo "Usage: $0 <file.ascii> <start_color> <end_color>"
+if [[ $# -ne 4 ]]; then
+    echo "Usage: $0 <file.ascii> <start_color> <end_color> <output_file>"
     exit 1
 fi
 
 file=$1
 start_color=$2
 end_color=$3
+output_file=$4
 
-# Ensure the file exists
+# Ensure the input file exists
 if [[ ! -f "$file" ]]; then
     echo "File not found: $file"
     exit 1
@@ -41,6 +42,9 @@ fi
 # Get the longest line length for gradient calculation
 max_length=$(awk '{ if (length > max) max = length } END { print max }' "$file")
 
+# Prepare the output file
+> "$output_file"
+
 # Precompute gradient colors
 declare -a gradient_colors
 for ((i=0; i<max_length; i++)); do
@@ -48,12 +52,15 @@ for ((i=0; i<max_length; i++)); do
     gradient_colors[$i]=$(interpolate_color "$start_color" "$end_color" "$factor")
 done
 
-# Read and print the file with gradient
+# Read the file and generate colored output
 while IFS= read -r line; do
     for ((i=0; i<${#line}; i++)); do
         char="${line:i:1}"
         color="${gradient_colors[$i]}"
-        printf "\e[38;2;%sm%s" "$color" "$char"
+        printf "\e[38;2;%sm%s" "$color" "$char" >> "$output_file"
     done
-    echo -e "\e[0m"
+    echo -e "\e[0m" >> "$output_file"
 done < "$file"
+
+# Use cat to display the generated file
+cat "$output_file"
