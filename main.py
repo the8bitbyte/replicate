@@ -77,4 +77,4 @@ if __name__ == "__main__":
         exit(1)
 
     # Run the Flask app
-    app.run(host="0.0.0.0", port=5000)  # Port 5000 assumes the `/api` path is proxied from the web server
+    app.run(host="0.0.0.0", port=7000)  # Port 5000 assumes the `/api` path is proxied from the web server
